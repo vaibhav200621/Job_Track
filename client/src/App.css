@@ -207,3 +207,68 @@ body {
   border-radius: 20px;
   font-size: 14px;
 }
+
+
+.application-item select {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+}
+
+.application-item button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  cursor: pointer;
+}
+
+.application-item button:hover {
+  background: #fecaca;
+}
+
+
+/* Applications page styling */
+
+.applications-page {
+  color: #172033;
+}
+
+.applications-page h1,
+.applications-page h2,
+.applications-page h3,
+.applications-page p {
+  color: #172033;
+}
+
+.applications-page h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.applications-page > p {
+  color: #64748b;
+}
+
+/* Form fields */
+.application-form input,
+.application-form select {
+  background: white;
+  color: #172033;
+}
+
+/* Status dropdown inside each application card */
+.application-item select {
+  background: white;
+  color: #172033;
+  min-width: 120px;
+  min-height: 42px;
+  cursor: pointer;
+}
+
+.application-item select option {
+  background: white;
+  color: #172033;
+}

@@ -24,6 +24,26 @@ function Applications() {
         setStatus("Applied");
     }
 
+
+    function handleStatusChange(id, newStatus) {
+        setApplications(
+            applications.map((application) =>
+                application.id === id
+                    ? { ...application, status: newStatus }
+                    : application
+            )
+        );
+    }
+
+
+    function handleDelete(id) {
+        setApplications(
+            applications.filter(
+                (application) => application.id !== id
+            )
+        );
+    }
+
     return (
         <section className="applications-page">
             <h1>Job Applications</h1>
@@ -72,7 +92,22 @@ function Applications() {
                                 <p>{application.role}</p>
                             </div>
 
-                            <span className="status">{application.status}</span>
+
+                            <select
+                                value={application.status}
+                                onChange={(event) =>
+                                    handleStatusChange(application.id, event.target.value)
+                                }
+                            >
+                                <option value="Applied">Applied</option>
+                                <option value="Interview">Interview</option>
+                                <option value="Offer">Offer</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+
+                            <button onClick={() => handleDelete(application.id)}>
+                                Delete
+                            </button>
                         </div>
                     ))}
                 </div>
