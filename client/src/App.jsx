@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./App.css";
 import Applications from "./Applications";
 
+// Sidebar Component
 function Sidebar({ page, setPage }) {
   return (
     <aside className="sidebar">
@@ -35,7 +36,18 @@ function Sidebar({ page, setPage }) {
   );
 }
 
-function Dashboard() {
+// Dashboard Component
+function Dashboard({ applications }) {
+  const totalApplications = applications.length;
+
+  const totalInterviews = applications.filter(
+    (application) => application.status === "Interview"
+  ).length;
+
+  const totalOffers = applications.filter(
+    (application) => application.status === "Offer"
+  ).length;
+
   return (
     <main className="main-content">
       <header className="topbar">
@@ -51,35 +63,40 @@ function Dashboard() {
       <section className="stats">
         <div className="card">
           <h3>Applications</h3>
-          <p>0</p>
+          <p>{totalApplications}</p>
         </div>
 
         <div className="card">
           <h3>Interviews</h3>
-          <p>0</p>
+          <p>{totalInterviews}</p>
         </div>
 
         <div className="card">
           <h3>Offers</h3>
-          <p>0</p>
+          <p>{totalOffers}</p>
         </div>
       </section>
     </main>
   );
 }
 
+// Main App Component
 function App() {
   const [page, setPage] = useState("dashboard");
+  const [applications, setApplications] = useState([]);
 
   return (
     <div className="app">
       <Sidebar page={page} setPage={setPage} />
 
       {page === "dashboard" ? (
-        <Dashboard />
+        <Dashboard applications={applications} />
       ) : (
         <main className="main-content">
-          <Applications />
+          <Applications
+            applications={applications}
+            setApplications={setApplications}
+          />
         </main>
       )}
     </div>
