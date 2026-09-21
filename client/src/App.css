@@ -1,8 +1,4 @@
 
-/* =========================
-   Global Reset
-========================= */
-
 * {
   box-sizing: border-box;
 }
@@ -14,10 +10,6 @@ body {
   color: #172033;
 }
 
-/* =========================
-   Main App Layout
-========================= */
-
 .app-layout {
   display: flex;
   min-height: 100vh;
@@ -26,9 +18,7 @@ body {
   color: #172033;
 }
 
-/* =========================
-   Sidebar
-========================= */
+/* Sidebar */
 
 .sidebar {
   width: 240px;
@@ -71,9 +61,7 @@ body {
   color: white;
 }
 
-/* =========================
-   Main Content
-========================= */
+/* Main Content */
 
 .main-content {
   flex: 1;
@@ -100,9 +88,7 @@ body {
   font-size: 16px;
 }
 
-/* =========================
-   Dashboard Statistics
-========================= */
+/* Dashboard */
 
 .stats-container {
   display: grid;
@@ -133,9 +119,7 @@ body {
   font-weight: bold;
 }
 
-/* =========================
-   Applications Form
-========================= */
+/* Application Form */
 
 .application-form-section,
 .applications-section {
@@ -183,9 +167,7 @@ body {
   background: #1d4ed8;
 }
 
-/* =========================
-   Application Search & Filter
-========================= */
+/* Search and Filters */
 
 .application-filters {
   display: flex;
@@ -213,9 +195,7 @@ body {
   min-width: 160px;
 }
 
-/* =========================
-   Applications List
-========================= */
+/* Application List */
 
 .applications-list {
   display: grid;
@@ -245,9 +225,20 @@ body {
 }
 
 .application-item p {
-  margin: 0;
+  margin: 0 0 8px;
   color: #64748b;
 }
+
+/* Application Date */
+
+.application-item .application-date {
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Status and Actions */
 
 .application-actions {
   display: flex;
@@ -293,9 +284,7 @@ body {
   border-radius: 12px;
 }
 
-/* =========================
-   Responsive Layout
-========================= */
+/* Responsive Layout */
 
 @media (max-width: 1000px) {
   .stats-container {

@@ -13,8 +13,9 @@ function Applications({ applications, setApplications }) {
     const company = form.company.value.trim();
     const role = form.role.value.trim();
     const status = form.status.value;
+    const appliedDate = form.appliedDate.value;
 
-    if (!company || !role) {
+    if (!company || !role || !appliedDate) {
       return;
     }
 
@@ -23,6 +24,7 @@ function Applications({ applications, setApplications }) {
       company,
       role,
       status,
+      appliedDate,
     };
 
     setApplications((previousApplications) => [
@@ -100,6 +102,13 @@ function Applications({ applications, setApplications }) {
             <option value="Rejected">Rejected</option>
           </select>
 
+          <input
+            type="date"
+            name="appliedDate"
+            aria-label="Application date"
+            required
+          />
+
           <button type="submit">Add Application</button>
         </form>
       </section>
@@ -143,6 +152,11 @@ function Applications({ applications, setApplications }) {
                 <div className="application-info">
                   <h3>{application.company}</h3>
                   <p>{application.role}</p>
+
+                  <p className="application-date">
+                    Applied on:{" "}
+                    {application.appliedDate || "Date not available"}
+                  </p>
                 </div>
 
                 <div className="application-actions">
