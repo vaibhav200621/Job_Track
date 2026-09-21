@@ -272,3 +272,43 @@ body {
   background: white;
   color: #172033;
 }
+
+/* Application Search and Filters */
+
+.application-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0 28px;
+}
+
+.application-filters input,
+.application-filters select {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  color: #172033;
+  font-size: 15px;
+}
+
+.application-filters input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.application-filters select {
+  min-width: 160px;
+}
+
+@media (max-width: 600px) {
+  .application-filters {
+    flex-direction: column;
+  }
+
+  .application-filters input,
+  .application-filters select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

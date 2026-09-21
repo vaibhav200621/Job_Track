@@ -1,24 +1,41 @@
 
+import { useState } from "react";
+
 function Applications({ applications, setApplications }) {
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+
   function handleSubmit(event) {
     event.preventDefault();
 
     const form = event.target;
 
+    const company = form.company.value.trim();
+    const role = form.role.value.trim();
+    const status = form.status.value;
+
+    if (!company || !role) {
+      return;
+    }
+
     const newApplication = {
       id: Date.now(),
-      company: form.company.value,
-      role: form.role.value,
-      status: form.status.value,
+      company,
+      role,
+      status,
     };
 
-    setApplications([...applications, newApplication]);
+    setApplications((previousApplications) => [
+      ...previousApplications,
+      newApplication,
+    ]);
+
     form.reset();
   }
 
   function handleStatusChange(id, newStatus) {
-    setApplications(
-      applications.map((application) =>
+    setApplications((previousApplications) =>
+      previousApplications.map((application) =>
         application.id === id
           ? { ...application, status: newStatus }
           : application
@@ -27,88 +44,138 @@ function Applications({ applications, setApplications }) {
   }
 
   function handleDelete(id) {
-    setApplications(
-      applications.filter(
+    setApplications((previousApplications) =>
+      previousApplications.filter(
         (application) => application.id !== id
       )
     );
   }
 
+  const filteredApplications = applications.filter((application) => {
+    const searchText = search.toLowerCase();
+
+    const matchesSearch =
+      application.company.toLowerCase().includes(searchText) ||
+      application.role.toLowerCase().includes(searchText);
+
+    const matchesStatus =
+      filterStatus === "All" ||
+      application.status === filterStatus;
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
-    <section className="applications-page">
-      <h1>Job Applications</h1>
-      <p>Manage and track your job applications.</p>
+    <div className="page-content">
+      <h1>Applications</h1>
+      <p className="page-subtitle">
+        Manage and track your job applications.
+      </p>
 
-      <form
-        className="application-form"
-        onSubmit={handleSubmit}
-      >
-        <input
-          name="company"
-          type="text"
-          placeholder="Company name"
-          required
-        />
+      <section className="application-form-section">
+        <h2>Add New Application</h2>
 
-        <input
-          name="role"
-          type="text"
-          placeholder="Job role"
-          required
-        />
+        <form
+          className="application-form"
+          onSubmit={handleSubmit}
+        >
+          <input
+            type="text"
+            name="company"
+            placeholder="Company name"
+            required
+          />
 
-        <select name="status" defaultValue="Applied">
-          <option value="Applied">Applied</option>
-          <option value="Interview">Interview</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
-        </select>
+          <input
+            type="text"
+            name="role"
+            placeholder="Job role"
+            required
+          />
 
-        <button type="submit">Add Application</button>
-      </form>
+          <select name="status" defaultValue="Applied">
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
 
-      <h2>Your Applications</h2>
+          <button type="submit">Add Application</button>
+        </form>
+      </section>
 
-      {applications.length === 0 ? (
-        <p>No applications added yet.</p>
-      ) : (
-        <div className="application-list">
-          {applications.map((application) => (
-            <div
-              className="application-item"
-              key={application.id}
-            >
-              <div>
-                <h3>{application.company}</h3>
-                <p>{application.role}</p>
-              </div>
+      <section className="applications-section">
+        <h2>Your Applications</h2>
 
-              <select
-                value={application.status}
-                onChange={(event) =>
-                  handleStatusChange(
-                    application.id,
-                    event.target.value
-                  )
-                }
-              >
-                <option value="Applied">Applied</option>
-                <option value="Interview">Interview</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+        <div className="application-filters">
+          <input
+            type="text"
+            placeholder="Search company or role..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
 
-              <button
-                type="button"
-                onClick={() => handleDelete(application.id)}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+          <select
+            value={filterStatus}
+            onChange={(event) => setFilterStatus(event.target.value)}
+          >
+            <option value="All">All Statuses</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
         </div>
-      )}
-    </section>
+
+        {filteredApplications.length === 0 ? (
+          <p className="empty-message">
+            {applications.length === 0
+              ? "No applications yet. Add your first application above!"
+              : "No applications match your search or filter."}
+          </p>
+        ) : (
+          <div className="applications-list">
+            {filteredApplications.map((application) => (
+              <div
+                className="application-item"
+                key={application.id}
+              >
+                <div className="application-info">
+                  <h3>{application.company}</h3>
+                  <p>{application.role}</p>
+                </div>
+
+                <div className="application-actions">
+                  <select
+                    value={application.status}
+                    onChange={(event) =>
+                      handleStatusChange(
+                        application.id,
+                        event.target.value
+                      )
+                    }
+                    aria-label={`Status for ${application.company}`}
+                  >
+                    <option value="Applied">Applied</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Offer">Offer</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    className="delete-button"
+                    onClick={() => handleDelete(application.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
 
