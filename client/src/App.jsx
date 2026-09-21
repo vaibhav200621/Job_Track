@@ -1,25 +1,24 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Applications from "./Applications";
 
-// Sidebar Component
 function Sidebar({ page, setPage }) {
   return (
     <aside className="sidebar">
       <h2 className="logo">JobTrack</h2>
 
-      <nav>
+      <nav className="sidebar-nav">
         <button
-          className={page === "dashboard" ? "active" : ""}
-          onClick={() => setPage("dashboard")}
+          className={page === "Dashboard" ? "active" : ""}
+          onClick={() => setPage("Dashboard")}
         >
           Dashboard
         </button>
 
         <button
-          className={page === "applications" ? "active" : ""}
-          onClick={() => setPage("applications")}
+          className={page === "Applications" ? "active" : ""}
+          onClick={() => setPage("Applications")}
         >
           Applications
         </button>
@@ -36,7 +35,6 @@ function Sidebar({ page, setPage }) {
   );
 }
 
-// Dashboard Component
 function Dashboard({ applications }) {
   const totalApplications = applications.length;
 
@@ -48,57 +46,80 @@ function Dashboard({ applications }) {
     (application) => application.status === "Offer"
   ).length;
 
+  const totalRejected = applications.filter(
+    (application) => application.status === "Rejected"
+  ).length;
+
   return (
-    <main className="main-content">
-      <header className="topbar">
-        <h2>Placement Dashboard</h2>
-        <span>Welcome, Vaibhav 👋</span>
-      </header>
+    <div className="page-content">
+      <h1>Dashboard</h1>
+      <p className="page-subtitle">
+        Welcome to your JobTrack dashboard!
+      </p>
 
-      <section className="welcome">
-        <h1>Your placement journey starts here!</h1>
-        <p>Track your progress and stay organized.</p>
-      </section>
-
-      <section className="stats">
-        <div className="card">
-          <h3>Applications</h3>
+      <div className="stats-container">
+        <div className="stat-card">
+          <h3>Total Applications</h3>
           <p>{totalApplications}</p>
         </div>
 
-        <div className="card">
+        <div className="stat-card">
           <h3>Interviews</h3>
           <p>{totalInterviews}</p>
         </div>
 
-        <div className="card">
+        <div className="stat-card">
           <h3>Offers</h3>
           <p>{totalOffers}</p>
         </div>
-      </section>
-    </main>
+
+        <div className="stat-card">
+          <h3>Rejected</h3>
+          <p>{totalRejected}</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
-// Main App Component
 function App() {
-  const [page, setPage] = useState("dashboard");
-  const [applications, setApplications] = useState([]);
+  const [page, setPage] = useState("Dashboard");
+
+  const [applications, setApplications] = useState(() => {
+    const savedApplications = localStorage.getItem("jobtrack-applications");
+
+    if (savedApplications) {
+      try {
+        return JSON.parse(savedApplications);
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "jobtrack-applications",
+      JSON.stringify(applications)
+    );
+  }, [applications]);
 
   return (
-    <div className="app">
+    <div className="app-layout">
       <Sidebar page={page} setPage={setPage} />
 
-      {page === "dashboard" ? (
-        <Dashboard applications={applications} />
-      ) : (
-        <main className="main-content">
+      <main className="main-content">
+        {page === "Dashboard" ? (
+          <Dashboard applications={applications} />
+        ) : (
           <Applications
             applications={applications}
             setApplications={setApplications}
           />
-        </main>
-      )}
+        )}
+      </main>
     </div>
   );
 }
