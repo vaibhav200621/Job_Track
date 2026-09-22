@@ -4,6 +4,7 @@ import { useState } from "react";
 function Applications({ applications, setApplications }) {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
+  const [editingId, setEditingId] = useState(null);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -57,12 +58,53 @@ function Applications({ applications, setApplications }) {
     );
   }
 
+  function handleEdit(id) {
+    setEditingId(id);
+  }
+
+  function handleEditSubmit(event, id) {
+    event.preventDefault();
+
+    const form = event.target;
+
+    const updatedApplication = {
+      company: form.company.value.trim(),
+      role: form.role.value.trim(),
+      status: form.status.value,
+      appliedDate: form.appliedDate.value,
+      interviewDate: form.interviewDate.value,
+      interviewNotes: form.interviewNotes.value.trim(),
+    };
+
+    if (
+      !updatedApplication.company ||
+      !updatedApplication.role ||
+      !updatedApplication.appliedDate
+    ) {
+      return;
+    }
+
+    setApplications((previousApplications) =>
+      previousApplications.map((application) =>
+        application.id === id
+          ? { ...application, ...updatedApplication }
+          : application
+      )
+    );
+
+    setEditingId(null);
+  }
+
   function handleDelete(id) {
     setApplications((previousApplications) =>
       previousApplications.filter(
         (application) => application.id !== id
       )
     );
+
+    if (editingId === id) {
+      setEditingId(null);
+    }
   }
 
   const filteredApplications = applications.filter((application) => {
@@ -161,74 +203,167 @@ function Applications({ applications, setApplications }) {
                 className="application-item"
                 key={application.id}
               >
-                <div className="application-info">
-                  <h3>{application.company}</h3>
-                  <p>{application.role}</p>
+                {editingId === application.id ? (
+                  <form
+                    className="edit-application-form"
+                    onSubmit={(event) =>
+                      handleEditSubmit(event, application.id)
+                    }
+                  >
+                    <h3>Edit Application</h3>
 
-                  <p className="application-date">
-                    Applied on:{" "}
-                    {application.appliedDate || "Date not available"}
-                  </p>
+                    <label>
+                      Company
+                      <input
+                        type="text"
+                        name="company"
+                        defaultValue={application.company}
+                        required
+                      />
+                    </label>
 
-                  <div className="interview-details">
+                    <label>
+                      Job Role
+                      <input
+                        type="text"
+                        name="role"
+                        defaultValue={application.role}
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      Status
+                      <select
+                        name="status"
+                        defaultValue={application.status}
+                      >
+                        <option value="Applied">Applied</option>
+                        <option value="Interview">Interview</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Applied Date
+                      <input
+                        type="date"
+                        name="appliedDate"
+                        defaultValue={application.appliedDate || ""}
+                        required
+                      />
+                    </label>
+
                     <label>
                       Interview Date
                       <input
                         type="date"
-                        value={application.interviewDate || ""}
-                        onChange={(event) =>
-                          handleInterviewChange(
-                            application.id,
-                            "interviewDate",
-                            event.target.value
-                          )
-                        }
+                        name="interviewDate"
+                        defaultValue={application.interviewDate || ""}
                       />
                     </label>
 
                     <label>
                       Interview Notes
                       <textarea
-                        value={application.interviewNotes || ""}
+                        name="interviewNotes"
+                        defaultValue={application.interviewNotes || ""}
+                        rows={3}
+                        placeholder="Topics to prepare, interview round, etc."
+                      />
+                    </label>
+
+                    <div className="application-actions">
+                      <button type="submit">Save Changes</button>
+
+                      <button
+                        type="button"
+                        onClick={() => setEditingId(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="application-info">
+                      <h3>{application.company}</h3>
+                      <p>{application.role}</p>
+
+                      <p className="application-date">
+                        Applied on:{" "}
+                        {application.appliedDate || "Date not available"}
+                      </p>
+
+                      <div className="interview-details">
+                        <label>
+                          Interview Date
+                          <input
+                            type="date"
+                            value={application.interviewDate || ""}
+                            onChange={(event) =>
+                              handleInterviewChange(
+                                application.id,
+                                "interviewDate",
+                                event.target.value
+                              )
+                            }
+                          />
+                        </label>
+
+                        <label>
+                          Interview Notes
+                          <textarea
+                            value={application.interviewNotes || ""}
+                            onChange={(event) =>
+                              handleInterviewChange(
+                                application.id,
+                                "interviewNotes",
+                                event.target.value
+                              )
+                            }
+                            placeholder="Topics to prepare, interview round, etc."
+                            rows={3}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="application-actions">
+                      <select
+                        value={application.status}
                         onChange={(event) =>
-                          handleInterviewChange(
+                          handleStatusChange(
                             application.id,
-                            "interviewNotes",
                             event.target.value
                           )
                         }
-                        placeholder="Topics to prepare, interview round, etc."
-                        rows={3}
-                      />
-                    </label>
-                  </div>
-                </div>
+                        aria-label={`Status for ${application.company}`}
+                      >
+                        <option value="Applied">Applied</option>
+                        <option value="Interview">Interview</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
 
-                <div className="application-actions">
-                  <select
-                    value={application.status}
-                    onChange={(event) =>
-                      handleStatusChange(
-                        application.id,
-                        event.target.value
-                      )
-                    }
-                    aria-label={`Status for ${application.company}`}
-                  >
-                    <option value="Applied">Applied</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Offer">Offer</option>
-                    <option value="Rejected">Rejected</option>
-                  </select>
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(application.id)}
+                      >
+                        Edit
+                      </button>
 
-                  <button
-                    type="button"
-                    className="delete-button"
-                    onClick={() => handleDelete(application.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+                      <button
+                        type="button"
+                        className="delete-button"
+                        onClick={() => handleDelete(application.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
