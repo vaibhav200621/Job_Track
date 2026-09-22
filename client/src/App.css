@@ -1,8 +1,4 @@
 
-/* =========================
-   Global Reset
-========================= */
-
 * {
   box-sizing: border-box;
 }
@@ -14,10 +10,6 @@ body {
   color: #172033;
 }
 
-/* =========================
-   Main App Layout
-========================= */
-
 .app-layout {
   display: flex;
   min-height: 100vh;
@@ -26,9 +18,7 @@ body {
   color: #172033;
 }
 
-/* =========================
-   Sidebar
-========================= */
+/* Sidebar */
 
 .sidebar {
   width: 240px;
@@ -71,9 +61,7 @@ body {
   color: white;
 }
 
-/* =========================
-   Main Content
-========================= */
+/* Main Content */
 
 .main-content {
   flex: 1;
@@ -100,9 +88,7 @@ body {
   font-size: 16px;
 }
 
-/* =========================
-   Dashboard
-========================= */
+/* Dashboard Statistics */
 
 .stats-container {
   display: grid;
@@ -133,9 +119,59 @@ body {
   font-weight: bold;
 }
 
-/* =========================
-   Application Form
-========================= */
+/* Upcoming Interviews */
+
+.upcoming-interviews {
+  margin-top: 36px;
+}
+
+.upcoming-interviews h2 {
+  margin: 0 0 20px;
+  color: #172033;
+  font-size: 24px;
+}
+
+.upcoming-interview-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 22px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.upcoming-interview-card h3 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 18px;
+}
+
+.upcoming-interview-card p {
+  margin: 0;
+  color: #64748b;
+}
+
+.upcoming-interview-date {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+
+.upcoming-interview-date span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.upcoming-interview-date strong {
+  color: #2563eb;
+  font-size: 16px;
+}
+
+/* Application Form */
 
 .application-form-section,
 .applications-section {
@@ -183,9 +219,7 @@ body {
   background: #1d4ed8;
 }
 
-/* =========================
-   Search and Filters
-========================= */
+/* Search and Filters */
 
 .application-filters {
   display: flex;
@@ -213,9 +247,7 @@ body {
   min-width: 160px;
 }
 
-/* =========================
-   Applications List
-========================= */
+/* Applications List */
 
 .applications-list {
   display: grid;
@@ -257,9 +289,7 @@ body {
   font-size: 14px;
 }
 
-/* =========================
-   Interview Details
-========================= */
+/* Interview Details */
 
 .interview-details {
   display: grid;
@@ -300,9 +330,7 @@ body {
   border-color: #2563eb;
 }
 
-/* =========================
-   Status and Actions
-========================= */
+/* Application Actions */
 
 .application-actions {
   display: flex;
@@ -348,9 +376,7 @@ body {
   border-radius: 12px;
 }
 
-/* =========================
-   Responsive Layout
-========================= */
+/* Responsive Layout */
 
 @media (max-width: 1000px) {
   .stats-container {
@@ -436,5 +462,14 @@ body {
 
   .interview-details {
     width: 100%;
+  }
+
+  .upcoming-interview-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .upcoming-interview-date {
+    text-align: left;
   }
 }

@@ -50,6 +50,19 @@ function Dashboard({ applications }) {
     (application) => application.status === "Rejected"
   ).length;
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const upcomingInterviews = applications
+    .filter(
+      (application) =>
+        application.status === "Interview" &&
+        application.interviewDate &&
+        application.interviewDate >= today
+    )
+    .sort((a, b) =>
+      a.interviewDate.localeCompare(b.interviewDate)
+    );
+
   return (
     <div className="page-content">
       <h1>Dashboard</h1>
@@ -78,6 +91,36 @@ function Dashboard({ applications }) {
           <p>{totalRejected}</p>
         </div>
       </div>
+
+      <section className="upcoming-interviews">
+        <h2>Upcoming Interviews</h2>
+
+        {upcomingInterviews.length === 0 ? (
+          <p className="empty-message">
+            No upcoming interviews. Add an interview date to an
+            application with Interview status.
+          </p>
+        ) : (
+          <div className="applications-list">
+            {upcomingInterviews.map((application) => (
+              <div
+                className="upcoming-interview-card"
+                key={application.id}
+              >
+                <div>
+                  <h3>{application.company}</h3>
+                  <p>{application.role}</p>
+                </div>
+
+                <div className="upcoming-interview-date">
+                  <span>Interview Date</span>
+                  <strong>{application.interviewDate}</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
@@ -86,7 +129,9 @@ function App() {
   const [page, setPage] = useState("Dashboard");
 
   const [applications, setApplications] = useState(() => {
-    const savedApplications = localStorage.getItem("jobtrack-applications");
+    const savedApplications = localStorage.getItem(
+      "jobtrack-applications"
+    );
 
     if (savedApplications) {
       try {
