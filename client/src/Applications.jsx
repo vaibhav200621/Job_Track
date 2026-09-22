@@ -25,6 +25,8 @@ function Applications({ applications, setApplications }) {
       role,
       status,
       appliedDate,
+      interviewDate: "",
+      interviewNotes: "",
     };
 
     setApplications((previousApplications) => [
@@ -40,6 +42,16 @@ function Applications({ applications, setApplications }) {
       previousApplications.map((application) =>
         application.id === id
           ? { ...application, status: newStatus }
+          : application
+      )
+    );
+  }
+
+  function handleInterviewChange(id, field, value) {
+    setApplications((previousApplications) =>
+      previousApplications.map((application) =>
+        application.id === id
+          ? { ...application, [field]: value }
           : application
       )
     );
@@ -157,6 +169,39 @@ function Applications({ applications, setApplications }) {
                     Applied on:{" "}
                     {application.appliedDate || "Date not available"}
                   </p>
+
+                  <div className="interview-details">
+                    <label>
+                      Interview Date
+                      <input
+                        type="date"
+                        value={application.interviewDate || ""}
+                        onChange={(event) =>
+                          handleInterviewChange(
+                            application.id,
+                            "interviewDate",
+                            event.target.value
+                          )
+                        }
+                      />
+                    </label>
+
+                    <label>
+                      Interview Notes
+                      <textarea
+                        value={application.interviewNotes || ""}
+                        onChange={(event) =>
+                          handleInterviewChange(
+                            application.id,
+                            "interviewNotes",
+                            event.target.value
+                          )
+                        }
+                        placeholder="Topics to prepare, interview round, etc."
+                        rows={3}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 <div className="application-actions">
