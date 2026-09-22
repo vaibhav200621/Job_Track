@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Applications from "./Applications";
+import Interviews from "./Interviews";
 
 function Sidebar({ page, setPage }) {
   return (
@@ -23,7 +24,10 @@ function Sidebar({ page, setPage }) {
           Applications
         </button>
 
-        <button onClick={() => alert("Coming soon!")}>
+        <button
+          className={page === "Interviews" ? "active" : ""}
+          onClick={() => setPage("Interviews")}
+        >
           Interviews
         </button>
 
@@ -158,12 +162,14 @@ function App() {
       <main className="main-content">
         {page === "Dashboard" ? (
           <Dashboard applications={applications} />
-        ) : (
+        ) : page === "Applications" ? (
           <Applications
             applications={applications}
             setApplications={setApplications}
           />
-        )}
+        ) : page === "Interviews" ? (
+          <Interviews applications={applications} />
+        ) : null}
       </main>
     </div>
   );
