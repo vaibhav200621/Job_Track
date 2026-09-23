@@ -67,6 +67,13 @@ function Dashboard({ applications }) {
       a.interviewDate.localeCompare(b.interviewDate)
     );
 
+  const recentApplications = [...applications]
+    .sort(
+      (a, b) =>
+        new Date(b.appliedDate) - new Date(a.appliedDate)
+    )
+    .slice(0, 5);
+
   return (
     <div className="page-content">
       <h1>Dashboard</h1>
@@ -120,6 +127,38 @@ function Dashboard({ applications }) {
                   <span>Interview Date</span>
                   <strong>{application.interviewDate}</strong>
                 </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="recent-applications">
+        <h2>Recent Applications</h2>
+
+        {recentApplications.length === 0 ? (
+          <p className="empty-message">
+            No applications yet. Add your first application!
+          </p>
+        ) : (
+          <div className="applications-list">
+            {recentApplications.map((application) => (
+              <div
+                className="recent-application-card"
+                key={application.id}
+              >
+                <div>
+                  <h3>{application.company}</h3>
+                  <p>{application.role}</p>
+                  <span>
+                    Applied:{" "}
+                    {application.appliedDate || "Date not available"}
+                  </span>
+                </div>
+
+                <span className="recent-application-status">
+                  {application.status}
+                </span>
               </div>
             ))}
           </div>
