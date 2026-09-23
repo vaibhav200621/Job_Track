@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Applications from "./Applications";
 import Interviews from "./Interviews";
+import Profile from "./Profile";
 
 import {
   BarChart,
@@ -16,8 +17,11 @@ import {
 
 function App() {
   const [page, setPage] = useState("Dashboard");
+
   const [applications, setApplications] = useState(() => {
-    const savedApplications = localStorage.getItem("jobtrack-applications");
+    const savedApplications = localStorage.getItem(
+      "jobtrack-applications"
+    );
     return savedApplications ? JSON.parse(savedApplications) : [];
   });
 
@@ -63,7 +67,6 @@ function App() {
     )
     .slice(0, 5);
 
-  // Chart ke liye status-wise application count
   const chartData = [
     {
       status: "Applied",
@@ -71,18 +74,9 @@ function App() {
         (application) => application.status === "Applied"
       ).length,
     },
-    {
-      status: "Interview",
-      count: totalInterviews,
-    },
-    {
-      status: "Offer",
-      count: totalOffers,
-    },
-    {
-      status: "Rejected",
-      count: totalRejected,
-    },
+    { status: "Interview", count: totalInterviews },
+    { status: "Offer", count: totalOffers },
+    { status: "Rejected", count: totalRejected },
   ];
 
   return (
@@ -113,7 +107,8 @@ function App() {
           </button>
 
           <button
-            onClick={() => alert("Profile page coming soon!")}
+            className={page === "Profile" ? "active" : ""}
+            onClick={() => setPage("Profile")}
           >
             Profile
           </button>
@@ -128,7 +123,6 @@ function App() {
               <p>Track your job search progress.</p>
             </header>
 
-            {/* Dashboard statistics */}
             <section className="stats-container">
               <div className="stat-card">
                 <h3>Total Applications</h3>
@@ -151,7 +145,6 @@ function App() {
               </div>
             </section>
 
-            {/* Upcoming interviews */}
             <section className="upcoming-interviews">
               <h2>Upcoming Interviews</h2>
 
@@ -166,9 +159,7 @@ function App() {
                     >
                       <h3>{application.company}</h3>
                       <p>{application.role}</p>
-                      <p>
-                        Date: {application.interviewDate}
-                      </p>
+                      <p>Date: {application.interviewDate}</p>
 
                       {application.interviewNotes && (
                         <p>{application.interviewNotes}</p>
@@ -179,7 +170,6 @@ function App() {
               )}
             </section>
 
-            {/* Recent applications */}
             <section className="recent-applications">
               <h2>Recent Applications</h2>
 
@@ -209,7 +199,6 @@ function App() {
               )}
             </section>
 
-            {/* Application progress chart */}
             <section className="progress-chart-section">
               <h2>Application Progress</h2>
               <p>Applications grouped by their current status.</p>
@@ -257,6 +246,8 @@ function App() {
         {page === "Interviews" && (
           <Interviews applications={applications} />
         )}
+
+        {page === "Profile" && <Profile />}
       </main>
     </div>
   );
